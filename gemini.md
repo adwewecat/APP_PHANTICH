@@ -159,6 +159,16 @@ Nếu máy tính vừa được cài lại Windows hoặc chuyển sang làm vi�
   - Cấu trúc thư mục: Tích hợp đầy đủ cây thư mục dự án REA v6.8.0.
 - **Trạng thái:** Hoàn tất thành công, mã nguồn sẵn sàng đẩy lên GitHub.
 
+### [2026-11-06] Cài đặt dependencies, Build REA & Phân tích CustomerOder.apk
+- **Mục tiêu:**
+  - Thực thi `npm.cmd ci` cài đặt đầy đủ các gói thư viện phụ thuộc của dự án.
+  - Thực thi `npm.cmd run build:cached` biên dịch runtime TypeScript của REA sang `dist/`.
+  - Sử dụng các công cụ phân tích của REA (APK signature inspection, artifact inspection, archive member inventory, DEX/manifest structure) để giải mã và phân tích file `CustomerOder.apk`.
+  - Xuất báo cáo bằng chứng chi tiết về ứng dụng `CustomerOder.apk`.
+- **File tác động:**
+  - `gemini.md`: Cập nhật nhật ký tiến độ trước khi thực thi.
+- **Trạng thái:** Đang tiến hành cài đặt dependencies và biên dịch REA.
+
 ---
 
 ## 6. KẾ HOẠCH BÀN GIAO TIẾP THEO (NEXT STEPS / ROADMAP)
