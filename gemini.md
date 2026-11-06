@@ -205,9 +205,26 @@ Nếu máy tính vừa được cài lại Windows hoặc chuyển sang làm vi�
   - Phân tích luồng nghiệp vụ Kitchen Display System (KDS): hiển thị đơn theo trạm chế biến, điều phối món, cập nhật trạng thái làm xong / hết món.
   - Trích xuất các API endpoints, Retrofit services và cơ sở dữ liệu cục bộ.
   - Xuất báo cáo tổng hợp chi tiết bức tranh toàn cảnh hệ sinh thái 3 ứng dụng (CO - SO - KDS).
+- **Kết quả phân tích Stafforder.apk (SO):**
+  - **Đơn vị sở hữu / Ký số:** Golden Gate Restaurant Group (G-People), cùng chữ ký số v1 & v2 và chứng thư với `CustomerOder.apk`.
+  - **Package Name & Phiên bản:** `com.ggg.stafforder` - v2.4.107.
+  - **Kiến trúc phần mềm:** Android Native (Java/Kotlin), quản lý dữ liệu với Room và SQLite cache (`cache.sqlite`).
+  - **Nghiệp vụ cốt lõi:** Quản lý đặt bàn (`BookingTimelineView`, `BookingFragment`), kiểm soát đĩa băng chuyền Kichi-Kichi bằng Camera AI (`CameraAIFragment`), đánh dấu ưu tiên món gửi bếp (`priorityDishItem`), hoãn món (`pendingDishItem`), hủy món có lý do (`CancelItemOrderedFragment`), kiểm bill (`BillCheckFragment`).
+  - **Giao tiếp mạng:** 208 endpoint REST API (`/ggg/api/v1.0/...`), kết nối MQTT thời gian thực (`MQTTService`, `MQTTUtilsService`) có âm báo (`beep`) và push notification.
+- **Kết quả phân tích KDS.apk (Kitchen Display System):**
+  - **Đơn vị sở hữu / Ký số:** Golden Gate Restaurant Group (G-People), chữ ký số đồng nhất.
+  - **Package Name & Phiên bản:** `com.example.kds_flutter` - v1.4.51.
+  - **Công nghệ nền tảng:** **Flutter / Dart** kết hợp quản lý thiết bị doanh nghiệp IBM MaaS360 MDM (`com.fiberlink.maas360.android.control`).
+  - **Nghiệp vụ bếp chuyên biệt:**
+    - Hiển thị order bếp theo từng trạm/line (`OrderCell`, `OrderFoodCell`, chế độ `LineCook`).
+    - Tự động đọc tên món mới vào bếp bằng giọng nói Tiếng Việt thông qua **Google Text-to-Speech** (`https://texttospeech.googleapis.com/v1/text`).
+    - Cảnh báo trễ món bằng đồng hồ đếm ngược và chuông báo động (`ic_clock_dish_late`, `assets/ratinglow.mp3`).
+    - Nhận lệnh ưu tiên món khẩn cấp (`OrderPrioritizedPopup`).
+    - Hoàn thành món (`SubmitDish`), rung chuông gọi phục vụ (`DingDish`) và bàn giao món (`CustomDialogDeliveryDish`).
+    - Quản lý khóa/mở khóa món và báo hết món (`icon_unlock_dish`).
 - **File tác động:**
-  - `gemini.md`: Cập nhật kế hoạch và kết quả phân tích.
-- **Trạng thái:** Đang tiến hành phân tích.
+  - `gemini.md`: Cập nhật chi tiết kết quả phân tích hệ sinh thái CO - SO - KDS.
+- **Trạng thái:** Hoàn tất xuất sắc, code sạch sẽ, sẵn sàng commit và push lên GitHub.
 
 ---
 
