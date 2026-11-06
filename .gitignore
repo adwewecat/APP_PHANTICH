@@ -9,6 +9,7 @@ build/
 node_modules
 *.egg-info/
 *.egg
+*.apk
 
 # Virtual environments
 .venv/
