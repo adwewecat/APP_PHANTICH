@@ -195,6 +195,20 @@ Nếu máy tính vừa được cài lại Windows hoặc chuyển sang làm vi�
   - `.gitignore`: Bổ sung `*.apk`.
 - **Trạng thái:** Hoàn tất xuất sắc, code sạch sẽ, sẵn sàng đồng bộ lên GitHub.
 
+### [2026-11-06] Phân tích chuyên sâu hệ sinh thái Stafforder.apk (SO) và KDS.apk (KDS)
+
+- **Mục tiêu:**
+  - Sử dụng REA phân tích chữ ký số, tính toàn vẹn và chứng thư của `Stafforder.apk` và `KDS.apk`.
+  - Trích xuất và phân tích cấu trúc Manifest, Activity, Service, Permission của cả 2 ứng dụng.
+  - Phân tích cơ chế truyền thông MQTT, cấu hình Broker, các Topic trao đổi giữa SO, CO và KDS.
+  - Phân tích luồng nghiệp vụ Staff Order (SO): quản lý ca, mở bàn, gán bàn, duyệt order, điều chỉnh món, hủy món.
+  - Phân tích luồng nghiệp vụ Kitchen Display System (KDS): hiển thị đơn theo trạm chế biến, điều phối món, cập nhật trạng thái làm xong / hết món.
+  - Trích xuất các API endpoints, Retrofit services và cơ sở dữ liệu cục bộ.
+  - Xuất báo cáo tổng hợp chi tiết bức tranh toàn cảnh hệ sinh thái 3 ứng dụng (CO - SO - KDS).
+- **File tác động:**
+  - `gemini.md`: Cập nhật kế hoạch và kết quả phân tích.
+- **Trạng thái:** Đang tiến hành phân tích.
+
 ---
 
 ## 6. KẾ HOẠCH BÀN GIAO TIẾP THEO (NEXT STEPS / ROADMAP)
