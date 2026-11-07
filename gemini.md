@@ -226,6 +226,36 @@ Nếu máy tính vừa được cài lại Windows hoặc chuyển sang làm vi�
   - `gemini.md`: Cập nhật chi tiết kết quả phân tích hệ sinh thái CO - SO - KDS.
 - **Trạng thái:** Hoàn tất xuất sắc, code sạch sẽ, sẵn sàng commit và push lên GitHub.
 
+### [2026-11-07] Phân tích chuyên sâu ứng dụng goffice-prod-2.8.0+17.apk (G-Office)
+
+- **Mục tiêu:**
+  - Sử dụng REA kiểm tra chữ ký số (`inspect-apk-signature`), tính toàn vẹn và chứng thư số của `goffice-prod-2.8.0+17.apk`.
+  - Kiểm kê cấu trúc gói APK (`inspect-artifact`), giải mã `AndroidManifest.xml` để xác định Package Name, Version, Activities, Services, Receivers, Permissions và Deep Links.
+  - Xác định nền tảng công nghệ (Flutter / React Native / Native Android), phân tích các thư viện native (`.so`), tài sản đóng gói (`assets/`), cấu hình môi trường và ngôn ngữ.
+  - Phân tích các phân hệ nghiệp vụ cốt lõi, các API endpoints, hệ thống xác thực (SSO/OAuth/Token), dịch vụ thông báo đẩy, cơ sở dữ liệu cục bộ và mối liên hệ với hệ sinh thái Golden Gate Group.
+  - Xuất báo cáo tổng hợp chi tiết kèm sơ đồ kiến trúc và đồng bộ lên GitHub.
+- **Kết quả phân tích goffice-prod-2.8.0+17.apk (G-Office):**
+  - **Định danh & Chữ ký số (`ev_8a11bad17ef7e53716293cbf7a3a30cf1f4e4d3a8f150b84380c3a757bf5ed2c`):**
+    - Kích thước: `55,177,813` bytes (~52.62 MB), SHA-256: `73e1c1b5740ba0c08cddb2591e45e3a27fd1ac8ae364625b3a1dc30244675e64`.
+    - Package Name: `com.goffice.ggg.prod` | Phiên bản: `2.8.0` (`versionCode: 17`, `minSdkVersion: 21`, `targetSdkVersion: 35`, `compileSdkVersion: 36`).
+    - Chữ ký APK Scheme v1 & v2 hợp lệ (`self_consistent = true`, `matches_apk = true`), được ký bằng chứng thư `CN=Android Debug, O=Android, C=US` (RSA, Serial `01`, hiệu lực `2025-08-08` đến `2055-08-01`, SHA-256 fingerprint: `f59fe1a18a162a47d52cc8ec57a7fd25d4e50cb50a605d664d8ea3caa4f4dc45`) và phân phối nội bộ qua cổng **G-Store** (`https://gstore.ggg.com.vn/mobileapp/gofficenew/prod/index.html`).
+  - **Kiến trúc kỹ thuật (`ev_03fa6b18643f07049871701f4696f111e54867016b4a29a308a3fc0d53df7449`):**
+    - Xây dựng trên nền tảng **Flutter / Dart** (`libapp.so` ~16.0 MB trên `arm64-v8a`, `libflutter.so` ~11.28 MB) theo chuẩn **Clean Architecture** (`data` / `domain` / `presentation`) với **888 file mã nguồn nội bộ** (`package:g_office/...`).
+    - Quản lý trạng thái bằng `flutter_bloc` (`Cubit`/`Bloc`) + `freezed`, Dependency Injection với `get_it` & `injectable`, định tuyến bằng `go_router` + Deep Link (`https://gpms.ggg.com.vn`), mạng HTTP qua `dio`.
+    - Tích hợp thư viện gốc: `libwebcrypto.so` (mã hóa mật khẩu RSA-OAEP qua FFI), `libmodpdfium.so` & `libjniPdfium.so` (đọc PDF tốc độ cao), Apache Tika (nhận diện MIME/văn bản), và trình xem Word/Excel nhúng Microsoft Office Online WOPI (`word_template.html`, `excel_template.html`).
+  - **Các phân hệ nghiệp vụ cốt lõi (Super-App Văn phòng số Golden Gate):**
+    1. **Xác thực SSO & Bảo mật (`features/auth`):** Đăng nhập tập trung qua `https://sso.ggg.com.vn` kết hợp OAuth PKCE (`code_challenge_utils.dart`, `/api/Goffice/request-code`) và cơ chế đổi mật khẩu bắt tay RSA-OAEP (`/sso/api/me/password/handshake` -> `password_encryptor.dart` -> `/sso/api/me/password/change`).
+    2. **G-Process (`features/g-process`):** Quản lý quy trình công việc & phê duyệt đa bước (`/api/mobile/processes/...`, `/api/mobile/tasks/...`), ủy quyền/đổi người xử lý (`change-assignee/approve|reject`), quy trình con (`child-ticket-requests`) và kiểm soát SLA.
+    3. **G-Ticket & Quick Ticket (`features/g-ticket`):** Hệ thống phiếu yêu cầu hỗ trợ nội bộ & chấm điểm chất lượng phục vụ (CSAT 4 mức), tích hợp Web Portal Quick Ticket (`https://qticket-gpms.ggg.com.vn`).
+    4. **Biểu mẫu động (`features/dynamic_form`):** Engine sinh form động từ cấu hình máy chủ (`/api/v1/mobile/dynamic-forms/answers/...`) với 14 loại trường dữ liệu, kiểm tra quyền theo từng bước quy trình (`step_permission`) và điều kiện rẽ nhánh (`transition_condition`).
+    5. **Phê duyệt Thực đơn PIM (`features/pim-menu`):** Luồng duyệt thay đổi thực đơn & giá món ăn từ hệ thống Product Information Management áp dụng xuống cây chi nhánh nhà hàng (`pim_menu_outlet_tree_model.dart`, `/api/Goffice/pim/menu-approvals`) — mắt xích nối trực tiếp từ văn phòng xuống thực đơn của `CustomerOder.apk` và `Stafforder.apk`.
+    6. **Phê duyệt Mua sắm PR/PO (`features/pr-po`):** Duyệt Đề nghị mua hàng (Purchase Request - `/api/Goffice/purchase-requests`) và Đơn đặt hàng (Purchase Order - `/api/Goffice/purchase-orders`) kèm kiểm tra thẩm quyền (`approval-tab-permission`) và xét duyệt hỗ trợ bởi AI (`icon_ai_reviewed_approved.svg`).
+    7. **Chấm công & Nhật ký công việc (`features/worklog` & `time_sheet`):** Ghi nhận giờ làm việc hàng ngày (`/api/worklog/daily-total`), công việc định kỳ (`create_worklog_routine`) và liên kết giờ công trực tiếp vào từng nhiệm vụ G-Process / G-Ticket.
+    8. **Trợ lý ảo AI Hub, Cẩm nang AI & Liên thông Super-App (`features/home` & `common`):** Nhúng nút nổi Chatbot AI toàn cục (`global_chatbot_overlay.dart` kết nối `https://ai-hub-stg.ggg.com.vn/?token=GOFFICE:{accessToken}`), Cẩm nang nhân viên AI (`/api/files/specialize/HANDBOOK_AI`), và gọi chéo sang ứng dụng **G-Checklist** (`gchecklist://`), **G-Stars Manager** (`gstarsmgr://`), **G-Survey** (`https://gsurvey.ggg.com.vn`).
+- **File tác động:**
+  - `gemini.md`: Ghi nhận kế hoạch (Pre-action log) và cập nhật đầy đủ kết quả phân tích `goffice-prod-2.8.0+17.apk`.
+- **Trạng thái:** Hoàn tất xuất sắc, code sạch sẽ, đã commit và push lên GitHub.
+
 ---
 
 ## 6. KẾ HOẠCH BÀN GIAO TIẾP THEO (NEXT STEPS / ROADMAP)
